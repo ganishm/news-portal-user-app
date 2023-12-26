@@ -1,6 +1,6 @@
 import React from "react";
-import logo from "./logo.png";
 import vrlogo from './final.png'
+
 const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-dark text-light sticky-top">
