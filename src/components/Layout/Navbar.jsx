@@ -1,18 +1,19 @@
 import React from "react";
 import logo from "./logo.png";
+import vrlogo from './final.png'
 const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-dark text-light sticky-top">
-      <div className="container-fluid">
+      <div className="container">
         <a className="navbar-brand d-flex align-items-center" href="#">
           <img
-            src={logo}
+            src={vrlogo }
             alt="Bootstrap"
             className="d-inline-block ms-2"
             width="30"
             height="30"
           />
-          <span className="ms-2 text-light">The React News</span>
+          <span className="ms-2 text-light">News</span>
         </a>
        <button
           className="navbar-toggler align-content-center bg-light"

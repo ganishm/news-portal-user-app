@@ -8,12 +8,13 @@ import Footer from "../Layout/Footer";
 const HomePage = () => {
   return (
    <>
-    <div className="container-fluid ">
+    <div className="container ">
       <Navbar/>
       <div className="row justify-content-center">
-        <div className="col-lg-12">
+        <div className="col-lg-8">
           <Slideimage />
-        </div>
+        </div>   </div>
+        <div className="row justify-content-center">
         <NewsCard />
         <NewsCard />
         <NewsCard />
@@ -26,7 +27,7 @@ const HomePage = () => {
         <NewsCard />
         <NewsCard />
         <NewsCard />
-      </div>
+   </div>
       <Footer/>
     </div></>
   );
