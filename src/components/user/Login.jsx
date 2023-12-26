@@ -1,5 +1,6 @@
 import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
+import axios from 'axios';
 
 // Login Component
 const Login = () => {
@@ -10,18 +11,16 @@ const Login = () => {
 
   const onSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
-      // Call the login API
-      const response = await fetch("api", {
-        method: "POST",
-        credentials: "include",
+      // Call the login API using Axios
+      const response = await axios.post("api", {
+        email: values.email,
+        password: values.password
+      }, {
+        withCredentials: true, // Include credentials
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: values.email,
-          password: values.password
-        })
       });
 
-      const data = await response.json();
+      const data = response.data;
 
       // Redirect when login is successful
       if (data.success === true) {
