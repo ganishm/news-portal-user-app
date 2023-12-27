@@ -1,31 +1,44 @@
 import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 // Login Component
 const Login = () => {
+  const navigate = useNavigate();
+
   const initialValues = {
     email: '',
     password: '',
   };
 
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(8, 'Password must be at least 8 characters')
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
+        'Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character'
+      ),
+  });
+
   const onSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
-      // Call the login API using Axios
       const response = await axios.post("api", {
         email: values.email,
         password: values.password
       }, {
-        withCredentials: true, // Include credentials
+        withCredentials: true,
         headers: { "Content-Type": "application/json" },
       });
 
       const data = response.data;
 
-      // Redirect when login is successful
       if (data.success === true) {
         alert("Login successful");
-        window.location = "/";
+        navigate('/');
       } else {
         setErrors({ email: '', password: '', error: data.data });
       }
@@ -42,6 +55,7 @@ const Login = () => {
         <div className="auth-inner">
           <Formik
             initialValues={initialValues}
+            validationSchema={validationSchema}
             onSubmit={onSubmit}
           >
             <Form>
