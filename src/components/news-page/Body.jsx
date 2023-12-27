@@ -5,7 +5,7 @@ const Body = () => {
   return (
     
 <Layout >
-  <div className="row g-5">
+  <div className="row g-5 text-black">
     <div className="col-md-8">
       <h1 className="pb-4 display-5 mb-4 fw-semibold border-bottom">
         Heading of the News

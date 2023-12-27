@@ -1,61 +1,49 @@
 import React, { useContext } from "react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { signInWithGoogle } from "../../firebase";
 import { config } from "../../config";
 import { UserContext } from "../../context/userContext";
+import { useFormik } from "formik";
+import { Link } from "react-router-dom";
 
 // Login Component
 const Login = () => {
   const navigate = useNavigate();
-  const {user,setUser} = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
 
-  const initialValues = {
-    email: "",
-    password: "",
-  };
-
-  const validationSchema = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    password: Yup.string()
-      .required("Password is required")
-      .min(8, "Password must be at least 8 characters")
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-        "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
-      ),
-  });
-
-  const onSubmit = async (values, { setSubmitting, setErrors }) => {
-    try {
-      const response = await axios.post(
-        "api",
-        {
-          email: values.email,
-          password: values.password,
-        },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      const data = response.data;
-
-      if (data.success === true) {
-        alert("Login successful");
-        navigate("/");
-      } else {
-        setErrors({ email: "", password: "", error: data.data });
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validate: (values) => {
+      const errors = {};
+      if (!values.email) {
+        errors.email = "Please enter your email";
+      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+        errors.email = "Invalid email address"; // checks the valid email address
       }
-    } catch (error) {
-      console.error("Error during login:", error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+
+      if (!values.password.trim()) {
+        errors.password = "Please enter the Password";
+      } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/.test(values.password)) {
+        errors.password = "Please enter a strong password"; // Corrected to "errors.password" and updated error message
+      }
+
+      return errors;
+    },
+    onSubmit: async (values) => {
+      try {
+        await axios.post("API Link", values);
+        alert("Login successful");
+      } catch (error) {
+        console.error(error);
+        alert("Something went wrong");
+      }
+    },
+  })
+
 
   let triggerGoogleLogin = async () => {
     try {
@@ -75,67 +63,122 @@ const Login = () => {
   };
 
   return (
-    <>
-      <div className="auth-wrapper">
-        <div className="auth-inner">
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}
-          >
-            <Form>
-              <h3>Log In</h3>
-              <div className="form-group my-1">
-                <label className="my-2">Email ID</label>
-                <Field
-                  type="email"
-                  name="email"
-                  className="form-control"
-                  placeholder="Enter email ID"
-                />
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className="alert-danger"
-                />
-              </div>
-              <div className="form-group my-1">
-                <label className="my-2">Password</label>
-                <Field
-                  type="password"
-                  name="password"
-                  className="form-control"
-                  placeholder="Enter password"
-                />
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="alert-danger"
-                />
-              </div>
-              <ErrorMessage
-                name="error"
-                component="div"
-                className="alert-danger"
-              />
-              <button
-                type="submit"
-                className="btn btn-primary btn-block w-100 my-3"
-              >
-                Log in
-              </button>
-              <p>
-                Don't have an account? <a href="/sign-up">register</a>
-              </p>
-              <p>
-                <a href="/forget-password">forget password</a>
-              </p>
-            </Form>
-          </Formik>
-          <button onClick={triggerGoogleLogin}>Signin with Google</button>
+    <article className="container kvnkjabvav">
+      <hgroup className="row justify-content-center">
+        <div className="col-md-9">
+          <section className="card o-hidden border-0 shadow-lg my-5">
+            <main className="card-body p-0">
+              <section className="row justify-content-center">
+
+                <section className="col-lg-7 p-5">
+                  <hgroup className="d-flex justify-content-center user-heading">
+
+                    <h1 className="text-center  fw-bolder text-reddish" >VR NEWS</h1>
+                  </hgroup>
+
+                  <header className="text-center">
+                    <h1 className="h4 text-gray-900 mb-4">
+                       Login to you Account
+                    </h1>
+                  </header>
+                  <form className="user" onSubmit={formik.handleSubmit}>
+                    {formik.errors.general && (
+                      <section className="alert alert-danger" role="alert">
+                        {formik.errors.general.message}
+                      </section>
+                    )}
+                    <section className="form-group">
+                      <input
+                        className={`form-control form-control-user ${formik.touched.email && formik.errors.email
+                            ? "is-invalid"
+                            : ""
+                          }`}
+                        id="email"
+                        aria-describedby="emailHelp"
+                        placeholder="Enter Email Address..."
+                        name="email"
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.email && formik.errors.email && (
+                        <span className="d-block ms-3 text-danger small invalid-feedback">
+                          {formik.errors.email}
+                        </span>
+                      )}
+                    </section>
+                    <section className="form-group">
+                      <div>
+                        <input
+                          type="password"
+                          className={`form-control form-control-user ${formik.touched.password && formik.errors.password
+                              ? "is-invalid"
+                              : ""
+                            }`}
+                          id="password"
+                          placeholder="Password"
+                          name="password"
+                          value={formik.values.password}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                        />
+                        <div>
+                          
+                        </div>
+                        {formik.touched.password && formik.errors.password && (
+                          <span className="d-block ms-3 text-danger small invalid-feedback">
+                            {formik.errors.password}
+                          </span>
+                        )}
+                      </div>
+                    </section>
+                    <section className="form-group">
+                      <section className="custom-control custom-checkbox small">
+                        <input
+                          type="checkbox"
+                          className="custom-control-input"
+                          id="customCheck"
+                        />
+                        <label
+                          className="custom-control-label"
+                          htmlFor="customCheck"
+                        >
+                          Remember Me
+                        </label>
+                      </section>
+                    </section>
+                    <button
+                      className="btn btn-primary btn-user btn-block"
+                      type="submit"
+                    >
+                    login
+                    </button>
+                  </form>
+                    <hr />
+                      <button onClick={triggerGoogleLogin} class="btn btn-google btn-user btn-block p-2"  style={{ borderRadius: "50px" }}>
+                        <i class="fab fa-google fa-fw"></i> Login with Google
+                      </button>
+                      <button class="btn btn-facebook btn-user btn-block p-2 text-small display-6"  style={{ borderRadius: "50px" }}>
+                        <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
+                      </button>
+                  <hr />
+                  <div className="text-center">
+                    <Link className="small" to={"/forgot-password"}>
+                      Forgot Password?
+                    </Link>
+                  </div>
+                  <div className="text-center">
+                    <Link className="small" to={"/register"}>
+                      Create an Account!
+                    </Link>
+                  </div>
+                </section>
+              </section>
+            </main>
+          </section>
         </div>
-      </div>
-    </>
+      </hgroup>
+    </article>
   );
 };
 
