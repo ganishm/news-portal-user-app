@@ -1,8 +1,10 @@
 import React from 'react'
 import newsimage from './image.webp'
+import Layout from '../Layout/Layout'
 const Body = () => {
   return (
-<main className="container">
+    
+<Layout >
   <div className="row g-5">
     <div className="col-md-8">
       <h1 className="pb-4 display-5 mb-4 fw-semibold border-bottom">
@@ -100,7 +102,7 @@ const Body = () => {
       </div>
     </div>
   </div>
-</main>
+</Layout>
 
   )
 }
