@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { signInWithGoogle } from "../../firebase";
 import { config } from "../../config";
+import { UserContext } from "../../context/userContext";
 
 // Login Component
 const Login = () => {
   const navigate = useNavigate();
+  const {user,setUser} = useContext(UserContext)
 
   const initialValues = {
     email: "",
@@ -64,6 +66,8 @@ const Login = () => {
         { token: user.accessToken }
       );
       localStorage.setItem("token", loginResp.data.token);
+      localStorage.setItem("user", JSON.stringify(loginResp.data.user));
+      setUser(loginResp.data.user)
       navigate("/");
     } catch (error) {
       console.error("Error during login:", error);
