@@ -3,15 +3,15 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 
-const PriceCard = ({ details }) => {
+const PriceCard = ({ details,createOrder }) => {
   return (
     <div className="col-lg-4 col-md-8">
       <div className="card mb-5 mb-lg-0  border border-primary">
         <div className="card-body">
           <h5 className="card-title text-muted text-uppercase text-center">{details.title}</h5>
-          <h6 className="card-price text-center">${details.pack}<span className="period">/month</span></h6>
+          <h6 className="card-price text-center">${details.price}<span className="period">/month</span></h6>
           <hr />
-            <ul className="fa-ul">
+            {/* <ul className="fa-ul">
               {details.features.map((item) => {
                 return (
                   <li className={item.value ? '' : 'text-muted'}>
@@ -26,9 +26,9 @@ const PriceCard = ({ details }) => {
                   </li>
                 );
               })}
-            </ul>
+            </ul> */}
             <div className="d-grid">
-              <button className="btn btn-primary text-uppercase">Subcribe</button>
+              <button onClick={() => createOrder(details)} className="btn btn-primary text-uppercase">Pay</button>
             </div>
         </div>
       </div>
