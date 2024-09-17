@@ -5,7 +5,7 @@ import HomePage from "./components/Home/HomePage";
 import NewsViewPage from "./components/NewsViewPage";
 import 'bootstrap'
 import SubscriptionPage from "./components/SubscriptionPage";
-import Register from "./components/user/Register";
+import Register from "./components/Signup-page/Signup";
 import Login from "./components/user/Login";
 function App() {
   return (
